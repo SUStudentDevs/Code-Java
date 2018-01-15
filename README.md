@@ -3,15 +3,14 @@
 Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pas possibles ("chevauchement").
 
 
-ENTRÉE : 
-
+##ENTRÉE : 
 -Liste des UE
 -Pour chaque UE, créneaux horaires de son amphi et de ses groupes de TD
 
 
 SORTIE :
--Liste des combinaisons de 5 UE, telles que pour toute UE, on puisse assister à son amphi et appartenir à au moins un groupe de TD
--Pour chaque combinaison d'UE, choix possibles de groupe de TD
+*Liste des combinaisons de 5 UE, telles que pour toute UE, on puisse assister à son amphi et appartenir à au moins un groupe de TD
+*Pour chaque combinaison d'UE, choix possibles de groupe de TD
 
 
 REMARQUES :
