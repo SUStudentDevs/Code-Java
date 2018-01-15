@@ -1,12 +1,11 @@
 # ÉNUMÉRATION
 
 ### EXEMPLE
-UPMC, année scolaire 2017/2018, L3 mono informatique. Des 15 UE proposées, nous de vons en choisir 5.
+(UPMC, année scolaire 2017/2018, L3 S6 mono informatique, logiciel utilisé : Novotip)
+Ayant seulement à disposition l'ensemble des créneaux horaires des 15 UE disponibles (cf https://github.com/UPMCStudentDevs/Code-Java/blob/master/edt%20S6.png), nous devons choisir 5 UE à suivre.
+Théoriquement, il y a 5 parmi 15 soit 3003 combinaisons possibles.
+En pratique, seulement 1066 combinaisons fonctionnent, __soit 65% de chance qu'une demande naïve de 5 UE soit refusée.__
 Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pas possibles ("chevauchement").
-![alt text](https://github.com/UPMCStudentDevs/Code-Java/blob/master/edt%20S6.png)
-
-<img align="left" width="100" height="100" src="https://github.com/UPMCStudentDevs/Code-Java/blob/master/edt%20S6.png">
-<img src="https://github.com/UPMCStudentDevs/Code-Java/blob/master/edt%20S6.png">
 
 
 ## ENTRÉE : 
