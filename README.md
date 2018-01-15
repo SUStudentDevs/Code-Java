@@ -6,8 +6,8 @@ Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pa
 ![alt text](https://github.com/UPMCStudentDevs/Code-Java/blob/master/edt%20S6.png)
 
 
+<img align="left" width="100" height="100" src="https://github.com/UPMCStudentDevs/Code-Java/blob/master/edt%20S6.png">
 
-https://github.com/UPMCStudentDevs/Code-Java/blob/master/edt%20S6.png
 
 ## ENTRÉE : 
 - Liste des UE
