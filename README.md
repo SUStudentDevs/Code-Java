@@ -1,6 +1,6 @@
 # Code-Java
 
-###### Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pas possibles ("chevauchement").
+##### Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pas possibles ("chevauchement").
 
 
 ## ENTRÉE : 
