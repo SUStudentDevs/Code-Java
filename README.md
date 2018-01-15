@@ -1,6 +1,8 @@
-# Code-Java
+# ÉNUMÉRATION
 
-##### Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pas possibles ("chevauchement").
+### EXAMPLE
+UPMC, année scolaire 2017/2018, L3 mono informatique. Des 15 UE proposées, nous de vons en choisir 15.
+Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pas possibles ("chevauchement").
 
 
 ## ENTRÉE : 
