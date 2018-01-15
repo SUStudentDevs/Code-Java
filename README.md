@@ -8,18 +8,18 @@ Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pa
 - Pour chaque UE, créneaux horaires de son amphi et de ses groupes de TD
 
 
-### SORTIE :
+## SORTIE :
 - Liste des combinaisons de 5 UE, telles que pour toute UE, on puisse assister à son amphi et appartenir à au moins un groupe de TD
 - Pour chaque combinaison d'UE, choix possibles de groupe de TD
 
 
-## REMARQUES :
+###### REMARQUES :
 - Tous les groupes de TD sont supposés libres.
 - Il est donc inutile (mais pas incorrect) de fournir en entrée deux TD de la même UE ayant lieu au même instant.
 - Dans un deuxième temps, étant donné la liste exhaustive des TD et des amphis ainsi que les listes de choix des étudiants, un deuxième algorithme retournera le voeu accordé à chaque étudiant.
 
 
-## TODO :
+######## TODO :
 - Permettre à l'utilisateur d'ordonner les résultats par ordre de préférence d'UE
 - Gérer des UE à 3 ECTS
 - Gérer les étudiants en UE projet
