@@ -9,6 +9,10 @@ Théoriquement, il y a 5 parmi 15 soit 3003 combinaisons possibles.
 
 En pratique, seulement 1066 combinaisons fonctionnent, __soit 65% de chance qu'une demande naïve de 5 UE soit refusée.__
 
+Considérons maintenant le choix des groupes. Une fois nos 5 UE choisies, il faut choisir un groupe de TD pour chaque UE. (Le nombre de groupe varie selon les UE).
+
+Théoriquement, pour une combinaison de 5 UE, le nombre de possibilités est égal au produit du nombre de groupe de chaque UE. Dans notre cas, cela donne 135 368 possibilités.
+En pratique, il y en a seulement 4635 (3,4%).
 
 
 Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pas possibles ("chevauchement").
