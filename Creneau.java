@@ -20,7 +20,7 @@ public class Creneau{
 	
 	@Override
 	public String toString() {
-		return getGroupe()+","+jour+","+debut;
+		return groupe+","+jour+","+debut;
 	}
 
 	public int getGroupe() {

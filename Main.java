@@ -7,7 +7,7 @@ public class Main {
 	/*
 	 * TODO: lister UE par ordre de préférence
 	 */
-	//static int[] idUE = {2,5,8,10,12,17,18,19,20,21,22,24,25,26,27}; //{26,5,8,20,22,24,2,10};
+	static int[] pref = {26,5,8,20,22,24,2,10};//12,17,18,19,21,25,27};//{2,5,8,10,12,17,18,19,20,21,22,24,25,26,27};
 
 	/*
 	 * group=false n'affiche pas les groupes de TD 
@@ -47,13 +47,18 @@ public class Main {
 	 */
 	private static void enumeration(TreeSet<UE[]> tree, UE[] tab, int indMin, int profondeur){
 		//appel terminal stocke tab dans arbre 
-		if(profondeur == NB_UE) {
+		if(profondeur == tab.length) {
 			tree.add(UE.deepCopy(tab));
-			UE.checkOk(tab, NB_UE);//debug
+			UE.checkOk(tab, tab.length);//debug
 			return;
 		}
 		
-		for (int i=indMin; i<UE.listeUE.size(); i++) {
+		//inutile de tester avec les (length - profondeur) dernières UE
+		//car il ne resterait pas assez d'UE pour remplir tab
+		final int indMax = UE.listeUE.size()+profondeur-tab.length + 1;
+		
+		//énumération avec toutes les UE disponibles
+		for (int i=indMin; i<indMax; i++) {
 			UE u = UE.listeUE.get(i);
 
 			if(u.isDisponible()) {
