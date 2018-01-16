@@ -13,7 +13,7 @@ Théoriquement, il y a 5 parmi 15 soit 3003 combinaisons possibles.
 
 En pratique, même avec tous les groupes de TD libres, seulement 1066 combinaisons fonctionnent. __Il y a donc au minimum 65% de chance qu'une demande naïve de 5 UE soit refusée.__
 
-Concernant le choix des groupes. Une fois nos 5 UE choisies, il faut choisir un groupe de TD pour chaque UE. (Le nombre de groupe varie selon les UE).
+Concernant le choix des groupes, une fois nos 5 UE choisies, il faut choisir un groupe de TD pour chaque UE. (Le nombre de groupe varie selon les UE).
 Théoriquement, pour une combinaison de 5 UE, le nombre de possibilités est égal au produit du nombre de groupe de chaque UE. Dans notre cas, cela donne 135 368 possibilités.
 En pratique, il y en a seulement 4635 (3,4%).
 
