@@ -40,4 +40,4 @@ Algorithme à appliquer dans le cas où des combinaisons de matières ne sont pa
 - Gérer les étudiants en UE projet
 - Gérer des UE possédant plusieurs créneaux pour leur amphi
 - Gérer des groupes de TD pour lesquels les créneaux ne sont pas consécutifs
-- Gérer les majeur, mineur, double majeur
+- Gérer les majeure, mineure, double majeure
