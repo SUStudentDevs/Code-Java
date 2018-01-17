@@ -1,7 +1,7 @@
 public class Creneau{
 
 	private final int jour, debut, fin, groupe;
-	boolean disponible=true;
+	boolean disponible=true;//variable utilisée pour énumérer les combinaisons
 
 	public Creneau(int jour, int debut, int fin, int groupe) {
 		this.jour = jour;

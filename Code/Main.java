@@ -5,11 +5,6 @@ import java.util.TreeSet;
 
 public class Main {
 	/*
-	 * TODO: lister UE par ordre de préférence
-	 */
-	static int[] pref = {26,5,8,20,22,24,2,10};//12,17,18,19,21,25,27};//{2,5,8,10,12,17,18,19,20,21,22,24,25,26,27};
-
-	/*
 	 * group=false n'affiche pas les groupes de TD 
 	 */
 	public static final boolean GROUP = true;
@@ -25,55 +20,64 @@ public class Main {
 		TreeSet<UE[]> tree = new TreeSet<>(UE.getComparator(GROUP));
 
 		//calcul combinaisons possibles
-		enumeration(tree,new UE[NB_UE],0,0);
-
+		enumeration(tree);
+		
 		System.out.println("nb combinaisons possibles " + tree.size());
-
+		
 		//affiche liste
 		Iterator<UE[]> it = tree.iterator();
 		while (it.hasNext()) {
 			UE[] tabU = it.next();
 			UE.checkOk(tabU, NB_UE);//debug
-			UE.affiche(tabU, GROUP);
+			System.out.println(UE.toString(tabU, GROUP));
 		}
 	}
 
+	
+	public static void enumeration(TreeSet<UE[]> tree) {
+		enumeration(tree,new UE[NB_UE],0,0);
+	}
+	
 	/**
 	 * Enumère toutes les combinaisons possibles de {@value #NB_UE} UE
 	 * @param tree Les résulats sont stockés dans un arbre de UE[NB_UE], l'ordonnement est défini par l'arbre lors de sa création
 	 * @param tab tableau auxiliaire de NB_UE cases
 	 * @param indMin mettre à 0 lors de l'appel
 	 * @param profondeur mettre à 0 lors de l'appel
+	 * La complexité théorique doit être O(nb_groupe ^ taille_tableau * log(nb_groupe ^ taille_tableau))
+	 * Après exécution, avec une taille d'arbre donnée n, on sait qu'on a eu une complexité de
+	 * n*log(n)		pour les ajouts dans le tableau
+	 * n*nb_groupe 	(au maximum) pour énumérer les combinaisons
 	 */
-	private static void enumeration(TreeSet<UE[]> tree, UE[] tab, int indMin, int profondeur){
-		//appel terminal stocke tab dans arbre 
-		if(profondeur == tab.length) {
-			tree.add(UE.deepCopy(tab));
-			UE.checkOk(tab, tab.length);//debug
-			return;
-		}
-		
+	private static void enumeration(TreeSet<UE[]> tree, UE[] tab, int indMin, int profondeur){		
 		//inutile de tester avec les (length - profondeur) dernières UE
 		//car il ne resterait pas assez d'UE pour remplir tab
-		final int indMax = UE.listeUE.size()+profondeur-tab.length + 1;
-		
+		final int indMax = UE.listeUE.size() + profondeur - tab.length + 1;
+
 		//énumération avec toutes les UE disponibles
 		for (int i=indMin; i<indMax; i++) {
 			UE u = UE.listeUE.get(i);
 
 			if(u.isDisponible()) {
 				tab[profondeur]=u;
-				for(int index : u.getFreeIndexList()) {
-					//rend indisponibles les créneaux incompatibles
-					LinkedList<HashSet<Creneau>> l = u.prendre(index);
 
-					UE.checkOk(tab,profondeur);//debug
+				//appel terminal stocke tab dans arbre 
+				if(profondeur == tab.length - 1) {
+					u.ajoutChaqueGroupeDispo(tree, tab);
+				}
+				else {
+					for(int index : u.getIndicesLibres()) {
+						//rend indisponibles les créneaux incompatibles
+						LinkedList<HashSet<Creneau>> l = u.prendre(index);
 
-					//appel récursif
-					enumeration(tree, tab, i+1, profondeur+1);
+						UE.checkOk(tab,profondeur);//debug
 
-					//re-rend disponibles les créneaux précédents
-					u.undo(l);
+						//appel récursif
+						enumeration(tree, tab, i+1, profondeur+1);
+
+						//re-rend disponibles les créneaux précédents
+						u.undo(l);
+					}
 				}
 			}
 		}
@@ -85,6 +89,6 @@ public class Main {
 		int[] jour = 	{0,	0,	0,	0,	1,	1,	2,	2,	3,	3,	3,	3,	4,	4,	4,		0,	0,	0,	0,	0,	0,		1,	1,	1,	1,	1,	1,		2,	2,	2,	2,	2,	2,	2,	2,	2,		3,	3,	3,	3,	3,	3,	3,		4,	4,	4,	4,	4,	4};
 		int[] heure = 	{0,	1,	2,	3,	0,	1,	1,	2,	0,	1,	2,	3,	1,	2,	3,		0,	0,	1,	2,	3,	3,		1,	1,	2,	3,	3,	3,		0,	0,	0,	2,	2,	2,	2,	3,	3,		0,	1,	1,	2,	3,	3,	3,		0,	0,	2,	2,	2,	2};
 		int[] groupe = 	{0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,		1,	4,	1,	2,	2,	1,		1,	1,	1,	3,	1,	1,		1,	2,	1,	4,	1,	3,	1,	1,	2,		2,	3,	4,	1,	1,	3,	4,		2,	5,	3,	2,	6,	2};
-		UE.generateListUE(id, jour, heure, groupe);
+		UE.genererListeUE(id, jour, heure, groupe);
 	}
 }
