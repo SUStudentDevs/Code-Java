@@ -1,17 +1,21 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
 public class UE{
-	static final ArrayList<UE> listeUE = new ArrayList<>();
+	static final HashMap<Integer, UE> listeUE = new HashMap<>();
+	static final ArrayList<Integer> listeId = new ArrayList<>();
 
 	private final int id;
 	private final Creneau amphi;
 	private final LinkedList<Creneau> TD;
 
 	private int TDChoisi;//variable utilisée pour énumérer les combinaisons
+
 	private boolean disponible=true;//variable utilisée pour énumérer les combinaisons
 
 	/**
@@ -26,41 +30,19 @@ public class UE{
 	/**
 	 * Crée la liste des UE
 	 * Tous les tableaux doivent avoir la même taille
-	 * Les créneaux des amphis doivent être au début
 	 * Si le ième créneau est un amphi, mettre groupe[i] à 0
 	 */
 	public static void genererListeUE(int[] id, int[] jour, int[] heure, int[] groupe) {
 		if(id.length != jour.length || id.length != heure.length || id.length != groupe.length)
 			throw new RuntimeException("les tableaux n'ont pas la même taille");
 
-		int i = 0;
-
-		while(groupe[i]==0) {
-			int j;
-			for(j=0; j<listeUE.size(); j++) {
-				if(listeUE.get(j).id>=id[i]) {
-					break;
-				}
+		for (int i = 0; i < groupe.length; i++) {
+			if(listeUE.containsKey(id[i]))
+				listeUE.get(id[i]).add(jour[i],heure[i],groupe[i]);
+			else {
+				listeUE.put(id[i],new UE(id[i],jour[i],heure[i]));
+				listeId.add(id[i]);
 			}
-			listeUE.add(j,new UE(id[i],jour[i],heure[i]));
-
-			i++;
-		}
-
-		while(i < id.length) {
-			boolean trouve=false;
-			for (UE u : listeUE){
-				if (u.id==id[i]){
-					u.add(jour[i],heure[i],groupe[i]);
-					trouve=true;
-					break;
-				}
-			}
-
-			if(!trouve)
-				throw new RuntimeException("UE non trouvée");
-
-			i++;
 		}
 	}
 
@@ -81,8 +63,8 @@ public class UE{
 		TD.add(i, new Creneau(jour, heure, heure+2,groupe));
 	}
 
-	
-	
+
+
 	/**
 	 * @return la liste des index (dans TD) des créneaux libres.
 	 * Les indexes sont décalés de 1 par rapport au numéro de TD.
@@ -101,29 +83,31 @@ public class UE{
 	/**
 	 * s'inscrit à un TD disponible d'une UE disponible
 	 * @param indexTD retourné par {@link #getIndicesLibres()}
-	 * @return liste à fournir à {@link #undo(LinkedList)} afin de rétablir la situation telle qu'avant cet appel de fonction 
+	 * @return objet à fournir à {@link #undo(LinkedList)} afin de rétablir la situation telle qu'avant cet appel de fonction 
 	 */
-	public LinkedList<HashSet<Creneau>> prendre(int indexTD) {
+	public HashMap<Integer, HashSet<Creneau>> prendre(int indexTD) {
 		if(!disponible || !TD.get(indexTD).disponible)
 			throw new RuntimeException("inscription à un TD ou UE indisponible");
 
 		TDChoisi=indexTD;
 
-		LinkedList<HashSet<Creneau>> l= new LinkedList<>();
-		for (int i = listeUE.indexOf(this) + 1; i < listeUE.size(); i++) {
-			UE u = listeUE.get(i);
-			HashSet<Creneau> l2 = null;
-			if(u.disponible) {
-				l2 = new HashSet<>();
-				l2.addAll(u.prevenirCreneauPris(amphi));
-				if(u.disponible)
-					l2.addAll(u.prevenirCreneauPris(TD.get(indexTD)));
-			}
-			l.add(l2);
+		HashMap<Integer, HashSet<Creneau>> map= new HashMap<>();
+
+		int indIni = listeId.indexOf(id);
+		for (int i=indIni; i<listeId.size(); i++) {
+				UE u = listeUE.get(listeId.get(i));
+				HashSet<Creneau> set = null;
+				if(u.disponible) {
+					set = new HashSet<>();
+					set.addAll(u.prevenirCreneauPris(amphi));
+					if(u.disponible)
+						set.addAll(u.prevenirCreneauPris(TDChoisi()));
+				}
+				map.put(u.id, set);
 		}
 
 		disponible=false;
-		return l;
+		return map;
 	}
 
 	/**
@@ -140,22 +124,21 @@ public class UE{
 		if(TD.contains(creneau))
 			throw new RuntimeException("désactive créneaux de l'UE choisie");
 
-		HashSet<Creneau> list = new HashSet<>();
-		
+		HashSet<Creneau> set = new HashSet<>();
+
 		if(Creneau.gene(creneau, amphi)) {
 			disponible=false;
 			amphi.disponible=false;
-			list.add(amphi);
-			return list;
+			set.add(amphi);
+			return set;
 		}
 
 		//désactive l'UE et la réactive si un TD est dispo
 		disponible=false;
-
 		for (int i=0; i<TD.size(); i++) {
 			if(TD.get(i).disponible) {
 				if(Creneau.gene(creneau, TD.get(i))) {
-					list.add(TD.get(i));
+					set.add(TD.get(i));
 					TD.get(i).disponible=false;		
 				}
 				else {
@@ -163,8 +146,8 @@ public class UE{
 				}
 			}
 		}
-		
-		return list;
+
+		return set;
 	}
 
 
@@ -172,9 +155,9 @@ public class UE{
 	 * annule un appel à {@link #prendre(int)}
 	 * @param l la liste retournée par {@link #prendre(int)}
 	 */
-	public void undo(LinkedList<HashSet<Creneau>> l) {
-		for (int i = listeUE.indexOf(this) + 1; i < listeUE.size(); i++) {
-			listeUE.get(i).undo(l.removeFirst());						
+	public void undo(HashMap<Integer, HashSet<Creneau>> map) {
+		for(int keyId : map.keySet()) {
+			listeUE.get(keyId).undo(map.get(keyId));
 		}
 		disponible=true;
 	}
@@ -204,7 +187,7 @@ public class UE{
 	public void ajoutChaqueGroupeDispo(TreeSet<UE[]> tree, UE[] tab) {
 		if(!disponible || this != tab[tab.length - 1])
 			throw new RuntimeException("appel incorrect");
-		
+
 		for (int i = 0; i < TD.size(); i++) {
 			if(TD.get(i).disponible) {
 				TDChoisi = i;
@@ -247,11 +230,8 @@ public class UE{
 		return new Comparator<UE[]>() {
 			@Override
 			public int compare(UE[] o1, UE[] o2) {
-				if(o1.length!=o2.length)
-					throw new RuntimeException("compare not full UE[]");
-
 				for (int i = 0; i < o1.length; i++) {
-					final int dif = listeUE.indexOf(o1[i])-listeUE.indexOf(o2[i]);
+					final int dif = o1[i].id - o2[i].id;
 					if(dif!=0)
 						return dif;
 				}
@@ -268,7 +248,7 @@ public class UE{
 			}
 		};
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if(obj.getClass()!=UE.class)
@@ -288,14 +268,14 @@ public class UE{
 		//pour chaque couple d'UE choisie
 		for (int i = 0; i < taille-1; i++) {
 			for (int j = i+1; j < taille; j++) {
-				
+
 				//amphi et TDChoisi des deux UE
 				Creneau[] tab = {liste[i].amphi, liste[i].TDChoisi(), liste[j].amphi, liste[j].TDChoisi()};
-				
+
 				//pour chaque couple de créneau
 				for (int k = 0; k < tab.length-1; k++) {
 					for (int l = k+1; l < tab.length; l++) {
-						
+
 						//regarde si il y a une collision
 						if(Creneau.gene(tab[k], tab[l]))
 							throw new RuntimeException(tab[k]+"\t"+tab[l]+" se chevauchent "+toString(liste, true));
@@ -312,13 +292,14 @@ public class UE{
 	public static int nbTheo(int nbAChoisir, boolean group) {
 		if(group) {			
 			int[] nbGroupe = new int[listeUE.size()];
-			for (int i = 0; i < listeUE.size(); i++) {
-				nbGroupe[i]=listeUE.get(i).TD.size();	
+			int i=0;
+			for (UE u : listeUE.values()) {
+				nbGroupe[i++]=u.TD.size();
 			}
 			int[] nbGroupeDesUEChoisies = new int[nbAChoisir];
 			return sum_prod_k_nb_parmi_n(0, 0, nbGroupe, nbGroupeDesUEChoisies);
 		}
-		
+
 		return k_parmi_n(nbAChoisir, listeUE.size());
 	}
 
@@ -373,9 +354,12 @@ public class UE{
 	public String toString() {
 		return id+" "+TDChoisi();
 	}
-	
+
 	private Creneau TDChoisi() {
 		return TD.get(TDChoisi);
+	}
+	public int getTDChoisi() {
+		return TDChoisi;
 	}
 
 
