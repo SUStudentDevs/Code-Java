@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,7 +82,7 @@ public class UE{
 	/**
 	 * s'inscrit à un TD disponible d'une UE disponible
 	 * @param indexTD retourné par {@link #getIndicesLibres()}
-	 * @return objet à fournir à {@link #undo(LinkedList)} afin de rétablir la situation telle qu'avant cet appel de fonction 
+	 * @return objet à fournir à {@link #undo()} afin de rétablir la situation telle qu'avant cet appel de fonction 
 	 */
 	public HashMap<Integer, HashSet<Creneau>> prendre(int indexTD) {
 		if(!disponible || !TD.get(indexTD).disponible)
@@ -153,7 +152,7 @@ public class UE{
 
 	/**
 	 * annule un appel à {@link #prendre(int)}
-	 * @param l la liste retournée par {@link #prendre(int)}
+	 * @param map objet retourné par {@link #prendre(int)}
 	 */
 	public void undo(HashMap<Integer, HashSet<Creneau>> map) {
 		for(int keyId : map.keySet()) {

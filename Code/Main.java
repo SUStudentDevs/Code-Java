@@ -8,7 +8,7 @@ public class Main {
 	/*
 	 * group=false n'affiche pas les groupes de TD 
 	 */
-	public static final boolean GROUP = true;
+	public static final boolean GROUP = false;
 	public static final int NB_UE = 5;
 
 	public static void main(String[] args) {
@@ -21,8 +21,7 @@ public class Main {
 		tri.setDisplayGroup(GROUP);
 		TreeSet<UE[]> arbre;
 		
-		LinkedList<Integer> l = new LinkedList<>(Arrays.asList(26,5,8,20,22,24,2,10));
-		arbre = tri.triParUEPrioritaire(l);//12,17,18,19,21,25,27};//{2,5,8,10,12,17,18,19,20,21,22,24,25,26,27};
+		arbre = tri.triParUEPrioritaire(new int[] {26,5,8,20,22,24,10,2}); //2,5,8,10,12,17,18,19,20,21,22,24,25,26,27};
 		arbre = tri.triParId();
 
 		arbre = tri.triParPoints(new int[] {5,8,25,26,2}, new int[] {5,3,8,7,-2});

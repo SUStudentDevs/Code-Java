@@ -1,7 +1,9 @@
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
@@ -14,17 +16,78 @@ public class Tri {
 		displayGroup=b;
 	}
 
-
 	private final LinkedList<Creneau> plages = new LinkedList<>();
-	public void plageHoraire(int jour, int debut, int fin, boolean libre) {
-
+	public void plageHoraire(int jour, int debut, int fin) {
+		Creneau n = new Creneau(jour, debut, fin);
+		for(Creneau c:plages) {
+			if (Creneau.gene(c, n)) {
+				throw new RuntimeException();
+			}
+		}
+		plages.add(n);
 	}
+
+	private final LinkedList<Integer> listeContenue = new LinkedList<>(); 
+	private final LinkedList<Integer> listeNonContenue = new LinkedList<>(); 
 
 	public void forcerUE(int id, boolean prise) {
-
+		if(prise) {
+			if(listeContenue.contains(id))
+				throw new RuntimeException("déjà donnée");
+			listeNonContenue.remove(id);
+			listeContenue.add(id);
+		}
+		else {
+			if(listeNonContenue.contains(id))
+				throw new RuntimeException("déjà donnée");
+			listeContenue.remove(id);
+			listeNonContenue.add(id);
+		}
 	}
-	public void resetUE(int id) {
 
+	public void resetUE(int id) {
+		listeNonContenue.remove(id);
+		listeContenue.remove(id);
+	}
+
+	private TreeSet<UE[]> tri(Comparator<Integer> compUE, Comparator<UE[]> compTab) {
+		for (Integer id : listeNonContenue) {
+			UE.listeId.remove(id);
+		}
+
+		if(compUE==null)
+			Collections.sort(UE.listeId);
+		else
+			Collections.sort(UE.listeId, compUE);
+
+		arbre = new TreeSet<>(compTab);
+
+		enumeration(arbre);
+
+
+		Iterator<UE[]> it = arbre.iterator();
+		while (it.hasNext()) {
+			UE[] tabU = it.next();
+			for(Integer id : listeContenue) {
+				boolean trouve=false;
+				for (UE ue : tabU) {
+					if(ue.getId()==id) {
+						trouve=true;
+						break;
+					}
+				}
+				if(!trouve) {
+					it.remove();
+					break;
+				}
+			}
+		}
+
+		for (Integer id : listeNonContenue) {
+			UE.listeId.add(id);
+		}
+
+		return arbre;
 	}
 
 	public TreeSet<UE[]> triParId() {
@@ -35,6 +98,19 @@ public class Tri {
 		enumeration(arbre);
 
 		return arbre;
+	}
+
+
+	public TreeSet<UE[]> triParUEPrioritaire(int[] a) {
+		List<Integer> l = new LinkedList<>();
+		for (int i : a) {
+			l.add(i);
+		}
+		return triParUEPrioritaire(l);
+	}
+
+	public TreeSet<UE[]> triParUEPrioritaire(Integer... a) {
+		return triParUEPrioritaire(Arrays.asList(a));
 	}
 
 	public TreeSet<UE[]> triParUEPrioritaire(List<Integer> pref) {
@@ -93,7 +169,7 @@ public class Tri {
 		Collections.sort(UE.listeId, new Comparator<Integer>() {
 			@Override
 			public int compare(Integer o1, Integer o2) {
-				final int dif = pointsOf(o1, id, points) - pointsOf(o2, id, points); 
+				final int dif = -pointsOf(o1, id, points) + pointsOf(o2, id, points); 
 				if(dif!=0)
 					return dif;
 				return o1-o2;		
@@ -105,10 +181,16 @@ public class Tri {
 			public int compare(UE[] o1, UE[] o2) {
 				int s=0;
 				for (int i = 0; i < o1.length; i++) {
-					s = s + pointsOf(o1[i].getId(), id, points) - pointsOf(o2[i].getId(), id, points);
+					s = s - pointsOf(o1[i].getId(), id, points) + pointsOf(o2[i].getId(), id, points);
 				}
 				if(s!=0)
 					return s;
+
+				for (int i = 0; i < o1.length; i++) {
+					final int dif = UE.listeId.indexOf(o1[i].getId()) - UE.listeId.indexOf(o2[i].getId());
+					if(dif!=0)
+						return dif;
+				}
 
 				if(displayGroup){
 					for (int i = 0; i < o1.length; i++) {
@@ -130,7 +212,7 @@ public class Tri {
 	private static int pointsOf(int uId, int[] id, int[] points) {
 		for (int i = 0; i < id.length; i++) {
 			if(id[i]==uId)
-				return -points[i];
+				return points[i];
 		}
 		return 0;
 	}
