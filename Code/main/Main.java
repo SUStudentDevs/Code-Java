@@ -3,54 +3,53 @@ import main.edtBrut.UE;
 import main.edtTravaille.Tri;
 
 public class Main {
-	/*
-	 * group=false n'affiche pas les groupes de TD 
-	 */
-	public static final boolean GROUP = true;
-	public static final int NB_UE = 5;
-
 	public static void main(String[] args) {
 		//crée les UE et assigne les TD
 		ini();
 
-		System.out.println("nb possibilités théoriques " + UE.nbTheo(NB_UE, GROUP));
 
 		Tri tri = new Tri();
 		tri.differencieSelonGroupe(true);	
+		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
 		tri.triParId();
 		tri.afficheTaille();
 
-		System.out.println("sans 2 avec 25");
-		tri.prendreUE(2, false);
-		tri.prendreUE(25, true);
+		System.out.println("\nsans 2 avec 25");
+		tri.nePasPrendre(2);
+		tri.prendreUE(25);
 		tri.triParId();
-		//tri.afficheTaille();
+		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
+		tri.afficheTaille();
 		
 		
 		tri.resetAllUE();
-		System.out.println("sans groupes, sans 2,17,18,19,20. tri avec 26,5,8,20,22,24,10,2,25 en priorité");
+		System.out.println("\nsans groupes, sans 2,5,17,18,19,20. tri avec 26,5,8,20,22,24,10,2,25 en priorité");
 		tri.differencieSelonGroupe(false);
-		tri.prendreUE(2, false);
-		tri.prendreUE(17, false);
-		tri.prendreUE(18, false);
-		tri.prendreUE(19, false);
-		tri.prendreUE(20, false);
-		tri.triParUEPrioritaire(new int[] {26,5,8,20,22,24,10,2,25}); //2,5,8,10,12,17,18,19,20,21,22,24,25,26,27};
+		tri.nePasPrendre(2);
+		tri.nePasPrendre(5);
+		tri.nePasPrendre(17);
+		tri.nePasPrendre(18);
+		tri.nePasPrendre(19);
+		tri.nePasPrendre(20);
+		tri.triParUEPrioritaire(new int[] {26,5,8,20,22,24,10,2,25});
+		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
 		tri.afficheTaille();
 		tri.afficheListe();
 
 		System.out.println("\n\n\n\npareil, tri par somme des points");
 		tri.triParPoints(new int[] {5,8,25,26,12}, new int[] {5,3,8,7,-2});
+		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
 		tri.afficheTaille();
 		tri.afficheListe();
 
 		tri.resetAllUE();
-		System.out.println("\n\n\n\npareil, tri par somme des points");
-		tri.plageHoraire(4, 2, 4);//vendredi aprem
-		tri.plageHoraire(0, 0, 2);//lundi matin
+		System.out.println("\n\n\n\nlibère lundi matin et vendredi aprem, tri par id");
+		tri.nePasPrendre(10);
+		tri.ajoutPlageHoraire(4, 2, 4);
+		tri.ajoutPlageHoraire(0, 0, 2);
 		tri.differencieSelonGroupe(true);
-		tri.prendreUE(10, false);
 		tri.triParId();
+		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
 		tri.afficheTaille();
 		tri.afficheListe();
 	}

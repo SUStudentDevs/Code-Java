@@ -1,7 +1,9 @@
 package test;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import main.edtBrut.UE;
 import main.edtTravaille.Tri;
@@ -17,7 +19,7 @@ class MyTest {
 		UE.genererListeUE(id, jour, heure, groupe);
 	}
 
-	Tri tri;
+	private Tri tri;
 	
 	@Test
 	void tri(){
@@ -32,15 +34,15 @@ class MyTest {
 		triParId(5);
 	}
 	
-	void triParId(int id) {
+	private void triParId(int id) {
 		tri.triParId();
 		int tot = tri.taille();
 
-		tri.prendreUE(id, false);
+		tri.nePasPrendre(id);
 		tri.triParId();
 		int sansU = tri.taille();
 
-		tri.prendreUE(id, true);
+		tri.prendreUE(id);
 		tri.triParId();
 		int avecU = tri.taille();
 

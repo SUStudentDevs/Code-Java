@@ -5,7 +5,7 @@ public class Creneau {
 
 	boolean disponible = true;// variable utilisée pour énumérer les combinaisons
 
-	public Creneau(int jour, int debut, int fin, int groupe) {
+	Creneau(int jour, int debut, int fin, int groupe) {
 		this.jour = jour;
 		this.debut = debut;
 		this.fin = fin;
@@ -31,19 +31,11 @@ public class Creneau {
 
 	@Override
 	public String toString() {
-		return groupe + "," + jour + "," + debut;
+		return groupe + "," + jour + ',' + debut;
 	}
 
 	public int getGroupe() {
 		return groupe;
-	}
-
-	public int getDebut() {
-		return debut;
-	}
-
-	public int getFin() {
-		return fin;
 	}
 
 }
