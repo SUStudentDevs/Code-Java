@@ -14,12 +14,12 @@ public class UE{
 	private final Creneau amphi;
 	private final LinkedList<Creneau> td;
 
-	private int tdChoisi;//variable utilisée pour énumérer les combinaisons
+	private int tdChoisi;//variable utilisÃ©e pour Ã©numÃ©rer les combinaisons
 
-	private boolean disponible=true;//variable utilisée pour énumérer les combinaisons
+	private boolean disponible=true;//variable utilisÃ©e pour Ã©numÃ©rer les combinaisons
 
 	/**
-	 * Les constructeurs de cette classe sont privés. Les UE doivent être créées via {@link #genererListeUE()}
+	 * Les constructeurs de cette classe sont privÃ©s. Les UE doivent Ãªtre crÃ©Ã©es via {@link #genererListeUE()}
 	 */
 	private UE(int i, int jour, int heure){
 		id = i;
@@ -28,15 +28,15 @@ public class UE{
 	}
 
 	/**
-	 * Crée la liste des UE
-	 * Si le ième créneau est un amphi, mettre groupe[i] à 0
+	 * CrÃ©e la liste des UE
+	 * Si le iÃ¨me crÃ©neau est un amphi, mettre groupe[i] Ã  0
 	 */
 	public static void genererListeUE(int[] id, int[] jour, int[] heure, int[] groupe) {
 		if(id.length != jour.length || id.length != heure.length || id.length != groupe.length) {
-			throw new RuntimeException("les tableaux n'ont pas la même taille");
+			throw new RuntimeException("les tableaux n'ont pas la mÃªme taille");
 		}
 
-		//crée les UE avec leurs amphis
+		//crÃ©e les UE avec leurs amphis
 		for (int i = 0; i < groupe.length; i++) {
 			if(groupe[i]==0) {
 				listeUE.put(id[i],new UE(id[i],jour[i],heure[i]));
@@ -54,15 +54,15 @@ public class UE{
 	}
 
 	/**
-	 * Crée un créneau et l'ajoute à l'UE
+	 * CrÃ©e un crÃ©neau et l'ajoute Ã  l'UE
 	 */
 	private void add(int jour, int heure, int groupe) {
 		if(groupe==0) {
-			throw new RuntimeException("amphi déjà défini");
+			throw new RuntimeException("amphi dÃ©jÃ  dÃ©fini");
 		}
 		for(Creneau c : getTd())
 			if(c.getGroupe()==groupe) {
-				throw new RuntimeException("groupe déjà défini");
+				throw new RuntimeException("groupe dÃ©jÃ  dÃ©fini");
 			}
 
 		//insertion en place
@@ -71,15 +71,15 @@ public class UE{
 			i++;
 		}
 		
-		//TODO: les TD sont forcément par bloc de 4 heures
+		//TODO: les TD sont forcÃ©ment par bloc de 4 heures
 		getTd().add(i, new Creneau(jour, heure, heure+2,groupe));
 	}
 
 
 
 	/**
-	 * @return la liste des indices (dans TD) des créneaux libres.
-	 * Les indices sont décalés de 1 par rapport au numéro de goupe de TD.
+	 * @return la liste des indices (dans TD) des crÃ©neaux libres.
+	 * Les indices sont dÃ©calÃ©s de 1 par rapport au numÃ©ro de goupe de TD.
 	 */
 	public LinkedList<Integer> getIndicesLibres() {
 		LinkedList<Integer> l = new LinkedList<>();
@@ -94,8 +94,8 @@ public class UE{
 	}
 
 	/**
-	 * Libère un créneau ne correspondant pas à une UE
-	 * @return objet à fournir à {@link #undoLaisserLibre()} afin de rétablir la situation telle qu'avant cet appel de fonction 
+	 * LibÃ¨re un crÃ©neau ne correspondant pas Ã  une UE
+	 * @return objet Ã  fournir Ã  {@link #undoLaisserLibre()} afin de rÃ©tablir la situation telle qu'avant cet appel de fonction 
 	 */
 	public static LinkedList<HashSet<Creneau>> laisserLibre(Creneau c) {
 		LinkedList<HashSet<Creneau>> l = new LinkedList<>();
@@ -113,20 +113,20 @@ public class UE{
 	}
 
 	/**
-	 * s'inscrit à une UE dans le groupe de TD donné en paramètre
-	 * @param indexTD retourné par {@link #getIndicesLibres()}
-	 * @return objet à fournir à {@link #undo()} afin de rétablir la situation telle qu'avant cet appel de fonction 
+	 * s'inscrit Ã  une UE dans le groupe de TD donnÃ© en paramÃ¨tre
+	 * @param indexTD retournÃ© par {@link #getIndicesLibres()}
+	 * @return objet Ã  fournir Ã  {@link #undo()} afin de rÃ©tablir la situation telle qu'avant cet appel de fonction 
 	 */
 	public LinkedList<HashSet<Creneau>> prendre(int indexTD) {
 		if(!disponible || !getTd().get(indexTD).disponible) {
-			throw new RuntimeException("inscription à un TD ou UE indisponible");
+			throw new RuntimeException("inscription Ã  un TD ou UE indisponible");
 		}
 
 		tdChoisi=indexTD;
 
 		LinkedList<HashSet<Creneau>> list= new LinkedList<>();
 
-		//ne préviens que les UE suivantes
+		//ne prÃ©viens que les UE suivantes
 		for(int ueId : listeId.subList(listeId.indexOf(id)+1, listeId.size())) {
 			UE u = listeUE.get(ueId);
 			HashSet<Creneau> set = null;
@@ -144,19 +144,19 @@ public class UE{
 	}
 
 	/**
-	 * Met à jour (rend non disponible) les créneaux chevauchant le créneau pris.
+	 * Met Ã  jour (rend non disponible) les crÃ©neaux chevauchant le crÃ©neau pris.
 	 * L'UE devient non disponible si son amphi ou tous ses TD ne sont plus disponibles.
-	 * Si l'amphi est désactivé, la fonction retourne immédiatement et ne regarde pas les TD.
-	 * @param	creneau n'appartenant pas à cette UE
-	 * @return	l'ensemble des créneaux rendus non disponible : l'amphi ou des TD.
+	 * Si l'amphi est dÃ©sactivÃ©, la fonction retourne immÃ©diatement et ne regarde pas les TD.
+	 * @param	creneau n'appartenant pas Ã  cette UE
+	 * @return	l'ensemble des crÃ©neaux rendus non disponible : l'amphi ou des TD.
 	 */
 	private HashSet<Creneau> prevenirCreneauPris(Creneau creneau){
 		if(!disponible) {
-			throw new RuntimeException("désactive créneaux d'une UE non dispo");
+			throw new RuntimeException("dÃ©sactive crÃ©neaux d'une UE non dispo");
 		}
 
 		if(getTd().contains(creneau)) {
-			throw new RuntimeException("désactive créneaux de l'UE choisie");
+			throw new RuntimeException("dÃ©sactive crÃ©neaux de l'UE choisie");
 		}
 
 		HashSet<Creneau> set = new HashSet<>(2);
@@ -168,7 +168,7 @@ public class UE{
 			return set;
 		}
 
-		//désactive l'UE et la réactive si un TD est dispo
+		//dÃ©sactive l'UE et la rÃ©active si un TD est dispo
 		disponible=false;
 		for (Creneau c : getTd()) {
 			if (c.disponible) {
@@ -186,8 +186,8 @@ public class UE{
 
 
 	/**
-	 * annule un appel à {@link #laisserLibre()}
-	 * @param l objet retourné par {@link #laisserLibre()}
+	 * annule un appel Ã  {@link #laisserLibre()}
+	 * @param l objet retournÃ© par {@link #laisserLibre()}
 	 */
 	public static void undoLaisserLibre(LinkedList<HashSet<Creneau>> l) {
 		for(int id : listeId) {
@@ -197,8 +197,8 @@ public class UE{
 
 
 	/**
-	 * annule un appel à {@link #prendre(int)}
-	 * @param l objet retourné par {@link #prendre(int)}
+	 * annule un appel Ã  {@link #prendre(int)}
+	 * @param l objet retournÃ© par {@link #prendre(int)}
 	 */
 	public void undo(LinkedList<HashSet<Creneau>> l) {
 		for(int ueId : listeId.subList(listeId.indexOf(id) + 1, listeId.size())) {
@@ -208,7 +208,7 @@ public class UE{
 	}
 	
 	/**
-	 * remet les créneaux enlevés et la disponibilité
+	 * remet les crÃ©neaux enlevÃ©s et la disponibilitÃ©
 	 * @param creneauPris
 	 */
 	private void undo(HashSet<Creneau> creneauPris) {
@@ -216,18 +216,18 @@ public class UE{
 			return;
 		}
 
-		//remet les créneaux enlevés
+		//remet les crÃ©neaux enlevÃ©s
 		for (Creneau c : creneauPris)
 			c.disponible=true;
 
-		//creneauPris n'est pas vide donc l'UE était disponible
+		//creneauPris n'est pas vide donc l'UE Ã©tait disponible
 		disponible=true;
 	}
 
 
 	/**
-	 * ajoute une entrée dans l'abre pour chaque groupe de TD disponible de l'UE.
-	 * @param tab doit être rempli et contenir l'UE appelante en dernière position
+	 * ajoute une entrÃ©e dans l'abre pour chaque groupe de TD disponible de l'UE.
+	 * @param tab doit Ãªtre rempli et contenir l'UE appelante en derniÃ¨re position
 	 */
 	public void ajoutChaqueGroupeDispo(Collection<UE[]> tree, UE[] tab) {
 		if(!disponible || this != tab[tab.length - 1]) {
@@ -255,7 +255,7 @@ public class UE{
 	}
 
 	/**
-	 * constructeur privé de copie, sert pour la fonction {@link #deepCopy()}}
+	 * constructeur privÃ© de copie, sert pour la fonction {@link #deepCopy()}}
 	 */
 	private UE(UE other){
 		id = other.id;
@@ -265,7 +265,7 @@ public class UE{
 	}
 
 	/**
-	 * vérifie que les UE choisies ainsi que leur TD choisi ne se chevauchent pas
+	 * vÃ©rifie que les UE choisies ainsi que leur TD choisi ne se chevauchent pas
 	 */
 	public static void checkOk(UE[] liste, int taille) {
 		//pour chaque couple d'UE choisie
@@ -275,7 +275,7 @@ public class UE{
 				//amphi et TDChoisi des deux UE
 				Creneau[] tab = {liste[i].amphi, liste[i].tdChoisi(), liste[j].amphi, liste[j].tdChoisi()};
 
-				//pour chaque couple de créneau
+				//pour chaque couple de crÃ©neau
 				for (int k = 0; k < tab.length-1; k++) {
 					for (int l = k+1; l < tab.length; l++) {
 
