@@ -1,14 +1,10 @@
 package com.sustudentdevs.algoues;
-import com.sustudentdevs.algoues.edtBrut.*;
-import com.sustudentdevs.algoues.edtTravaille.*;
+import com.sustudentdevs.algoues.edtTravaille.Tri;
 
 public class Main {
 	public static void main(String[] args) {
-		//crée les UE et assigne les TD
-		ini();
+		Tri tri = ini();
 
-
-		Tri tri = new Tri();
 		tri.differencieSelonGroupe(true);	
 		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
 		tri.triParId();
@@ -55,11 +51,11 @@ public class Main {
 	}
 
 	
-	private static void ini() {
-		int[] id = {5, 8, 10, 26,	2, 18, 24, 27, 17, 19, 25, 21, 12, 22, 20, 10, 24, 24, 2, 10,	20, 25,	17,	8, 26, 18, 22, 12, 17, 2, 17,	26, 10,	5, 21, 24, 12, 2, 10,	27, 19, 17, 2, 8,	2, 12, 27, 2, 5};
-		int[] jour = {0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 0,	0, 0,	0, 0,	0, 1, 1, 1,	1, 1,	1, 2,	2, 2,	2, 2, 2, 2,	2, 2, 3, 3, 3, 3,	3, 3,	3, 4, 4, 4,	4, 4, 4};
-		int[] heure = {0,	1, 2, 3, 0,	1, 1,	2, 0,	1, 2, 3, 1, 2, 3,	0, 0,	1, 2,	3, 3, 1, 1,	2, 3,	3, 3, 0, 0, 0, 2, 2, 2,	2, 3,	3, 0, 1, 1, 2, 3,	3, 3, 0, 0,	2, 2,	2, 2};
-		int[] groupe = {0, 0, 0, 0,	0, 0,	0, 0,	0, 0,	0, 0,	0, 0,	0, 1, 4, 1,	2, 2,	1, 1,	1, 1,	3, 1,	1, 1,	2, 1,	4, 1,	3, 1,	1, 2, 2, 3,	4, 1,	1, 3,	4, 2,	5, 3,	2, 6,	2};
-		UE.genererListeUE(id, jour, heure, groupe);
+	private static Tri ini() {
+		int[] id =		{5,  8, 10, 26,  2, 18, 24, 27, 17, 19, 25, 21, 12, 22, 20,		10, 24, 24,  2, 10, 20, 25, 17,  8, 26, 18, 22, 12, 17,  2, 17, 26, 10,  5, 21, 24, 12,  2, 10, 27, 19, 17,  2,  8,  2, 12, 27,  2,  5};
+		int[] jour =	{0,  0,  0,  0,  1,  1,  2,  2,  3,  3,  3,  3,  4,  4,  4,		 0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  2,  3,  3,  3,  3,  3,  3,  3,  4,  4,  4,  4,  4,  4};
+		int[] heure =	{0,  1,  2,  3,  0,  1,  1,  2,  0,  1,  2,  3,  1,  2,  3,		 0,  0,  1,  2,  3,  3,  1,  1,  2,  3,  3,  3,  0,  0,  0,  2,  2,  2,  2,  3,  3,  0,  1,  1,  2,  3,  3,  3,  0,  0,  2,  2,  2,  2};
+		int[] groupe =	{0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,		 1,  4,  1,  2,  2,  1,  1,  1,  1,  3,  1,  1,  1,  2,  1,  4,  1,  3,  1,  1,  2,  2,  3,  4,  1,  1,  3,  4,  2,  5,  3,  2,  6,  2};
+		return new Tri(id, jour, heure, groupe);
 	}
 }
