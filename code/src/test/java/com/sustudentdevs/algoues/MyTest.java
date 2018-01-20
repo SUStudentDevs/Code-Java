@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import main.edtBrut.UE;
-import main.edtTravaille.Tri;
+import com.sustudentdevs.algoues.edtBrut.UE;
+import com.sustudentdevs.algoues.edtTravaille.Tri;
 
 class MyTest {
 

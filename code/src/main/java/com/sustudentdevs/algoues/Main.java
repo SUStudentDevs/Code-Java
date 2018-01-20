@@ -1,6 +1,6 @@
-package main;
-import main.edtBrut.UE;
-import main.edtTravaille.Tri;
+package com.sustudentdevs.algoues;
+import com.sustudentdevs.algoues.edtBrut.*;
+import com.sustudentdevs.algoues.edtTravaille.*;
 
 public class Main {
 	public static void main(String[] args) {

@@ -1,4 +1,5 @@
-package main.edtBrut;
+package com.sustudentdevs.algoues.edtBrut;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

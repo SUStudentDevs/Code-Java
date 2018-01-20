@@ -1,4 +1,4 @@
-package main.edtTravaille;
+package com.sustudentdevs.algoues.edtTravaille;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,8 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
-import main.edtBrut.Creneau;
-import main.edtBrut.UE;
+import com.sustudentdevs.algoues.edtBrut.*;
 
 public class Tri {
 	private static final int NB_UE = 5;

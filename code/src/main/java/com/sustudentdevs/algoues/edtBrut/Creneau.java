@@ -1,4 +1,5 @@
-package main.edtBrut;
+package com.sustudentdevs.algoues.edtBrut;
+
 public class Creneau {
 
 	private final int jour, debut, fin, groupe;
