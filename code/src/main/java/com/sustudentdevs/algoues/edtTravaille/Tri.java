@@ -29,6 +29,7 @@ public class Tri {
 	}
 
 	private final LinkedList<Creneau> plages = new LinkedList<>();
+
 	/**
 	 * Empêche les enseignements d'avoir lieu pendant ces plages
 	 */
