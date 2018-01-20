@@ -4,13 +4,13 @@ import main.edtTravaille.Tri;
 
 public class Main {
 	public static void main(String[] args) {
-		//crée les UE et assigne les TD
+		//crÃ©e les UE et assigne les TD
 		ini();
 
 
 		Tri tri = new Tri();
 		tri.differencieSelonGroupe(true);	
-		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
+		System.out.println("nb possibilitÃ©s thÃ©oriques " + tri.nbTheorique());
 		tri.triParId();
 		tri.afficheTaille();
 
@@ -18,12 +18,12 @@ public class Main {
 		tri.nePasPrendre(2);
 		tri.prendreUE(25);
 		tri.triParId();
-		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
+		System.out.println("nb possibilitÃ©s thÃ©oriques " + tri.nbTheorique());
 		tri.afficheTaille();
 		
 		
 		tri.resetAllUE();
-		System.out.println("\nsans groupes, sans 2,5,17,18,19,20. tri avec 26,5,8,20,22,24,10,2,25 en priorité");
+		System.out.println("\nsans groupes, sans 2,5,17,18,19,20. tri avec 26,5,8,20,22,24,10,2,25 en prioritÃ©");
 		tri.differencieSelonGroupe(false);
 		tri.nePasPrendre(2);
 		tri.nePasPrendre(5);
@@ -32,24 +32,24 @@ public class Main {
 		tri.nePasPrendre(19);
 		tri.nePasPrendre(20);
 		tri.triParUEPrioritaire(new int[] {26,5,8,20,22,24,10,2,25});
-		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
+		System.out.println("nb possibilitÃ©s thÃ©oriques " + tri.nbTheorique());
 		tri.afficheTaille();
 		tri.afficheListe();
 
 		System.out.println("\n\n\n\npareil, tri par somme des points");
 		tri.triParPoints(new int[] {5,8,25,26,12}, new int[] {5,3,8,7,-2});
-		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
+		System.out.println("nb possibilitÃ©s thÃ©oriques " + tri.nbTheorique());
 		tri.afficheTaille();
 		tri.afficheListe();
 
 		tri.resetAllUE();
-		System.out.println("\n\n\n\nlibère lundi matin et vendredi aprem, tri par id");
+		System.out.println("\n\n\n\nsans 10, libÃ¨re lundi matin et vendredi aprem, tri par id");
 		tri.nePasPrendre(10);
 		tri.ajoutPlageHoraire(4, 2, 4);
 		tri.ajoutPlageHoraire(0, 0, 2);
 		tri.differencieSelonGroupe(true);
 		tri.triParId();
-		System.out.println("nb possibilités théoriques " + tri.nbTheorique());
+		System.out.println("nb possibilitÃ©s thÃ©oriques " + tri.nbTheorique());
 		tri.afficheTaille();
 		tri.afficheListe();
 	}
