@@ -1,4 +1,4 @@
-package main.edtTravaille;
+package com.sustudentdevs.algoues.edtTravaille;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,30 +8,30 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
-import main.edtBrut.Creneau;
-import main.edtBrut.UE;
+import com.sustudentdevs.algoues.edtBrut.*;
 
 public class Tri {
 	private static final int NB_UE = 5;
 
 	/**
-	 * Si on permet à l'utilisateur d'obtenir cette référence, un changement
-	 * des paramètres du tri (plages libres p.ex) rend l'arbre invalide
+	 * Si on permet Ã  l'utilisateur d'obtenir cette rÃ©fÃ©rence, un changement
+	 * des paramÃ¨tres du tri (plages libres p.ex) rend l'arbre invalide
 	 * jusqu'au prochain tri
 	 */
 	private TreeSet<UE[]> arbre;
 
 	private boolean groupe;
 	/**
-	 * Les résultats sont plus précis si le boolean est vrai
+	 * Les rÃ©sultats sont plus prÃ©cis si le boolean est vrai
 	 */
 	public void differencieSelonGroupe(boolean b) {
 		groupe=b;
 	}
 
 	private final LinkedList<Creneau> plages = new LinkedList<>();
+
 	/**
-	 * Empêche les enseignements d'avoir lieu pendant ces plages
+	 * EmpÃªche les enseignements d'avoir lieu pendant ces plages
 	 */
 	public void ajoutPlageHoraire(int jour, int debut, int fin) {
 		Creneau n = new Creneau(jour, debut, fin);
@@ -43,7 +43,7 @@ public class Tri {
 	}
 
 	/**
-	 * Enlève les restrictions de plages horaires
+	 * EnlÃ¨ve les restrictions de plages horaires
 	 */
 	public void resetPlages() {
 		plages.clear();
@@ -53,14 +53,14 @@ public class Tri {
 	private final LinkedList<Integer> listeNonContenue = new LinkedList<>(); 
 
 	/**
-	 * Force les résultats à contenir les UE choisies
+	 * Force les rÃ©sultats Ã  contenir les UE choisies
 	 */
 	public void prendreUE(Integer id) {
 		prendre(id, listeContenue, listeNonContenue);
 	}
 
 	/**
-	 * Force les résultats à ne pas contenir les UE choisies
+	 * Force les rÃ©sultats Ã  ne pas contenir les UE choisies
 	 */
 	public void nePasPrendre(Integer id) {
 		prendre(id, listeNonContenue, listeContenue);
@@ -70,24 +70,24 @@ public class Tri {
 		if(!UE.listeId.contains(id))
 			throw new RuntimeException("n'existe pas");
 		if(add.contains(id))
-			throw new RuntimeException("déjà prise");
+			throw new RuntimeException("dÃ©jÃ  prise");
 		add.add(id);
 
-		//attention à ne pas appeler remove(int) mais remove(Object);
+		//attention Ã  ne pas appeler remove(int) mais remove(Object);
 		remove.remove(id);
 	}
 
 	/**
-	 * Les résultats peuvent de nouveau contenir ou non cette UE
+	 * Les rÃ©sultats peuvent de nouveau contenir ou non cette UE
 	 */
 	public void resetUE(Integer id) {
-		//attention à ne pas appeler remove(int) mais remove(Object);
+		//attention Ã  ne pas appeler remove(int) mais remove(Object);
 		listeNonContenue.remove(id);
 		listeContenue.remove(id);
 	}
 
 	/**
-	 * Les résultats peuvent de nouveau contenir ou non toutes les UE
+	 * Les rÃ©sultats peuvent de nouveau contenir ou non toutes les UE
 	 */
 	public void resetAllUE() {
 		listeContenue.clear();
@@ -96,12 +96,12 @@ public class Tri {
 
 	/**
 	 * Prend en compte les options des variables membres
-	 * et réalise le tri des UE selon compUE
-	 * puis génère et trie les combinaisons selon compTab.
-	 * A la fin, restore les bases de données pour ne pas les corrompre
+	 * et rÃ©alise le tri des UE selon compUE
+	 * puis gÃ©nÃ¨re et trie les combinaisons selon compTab.
+	 * A la fin, restore les bases de donnÃ©es pour ne pas les corrompre
 	 */
 	private TreeSet<UE[]> tri(Comparator<Integer> compUE, Comparator<UE[]> compTab) {
-		//enlève les UE non souhaitées de listeId seulement (et pas de listeUE)
+		//enlÃ¨ve les UE non souhaitÃ©es de listeId seulement (et pas de listeUE)
 		UE.listeId.removeAll(listeNonContenue);
 
 		//tri listeId par l'ordre
@@ -112,8 +112,8 @@ public class Tri {
 			//fourni en argument
 			UE.listeId.sort(compUE);
 
-		//enlève les créneaux interférant avec nos plages libres.
-		//en garde une référence pour les restaurer à la fin
+		//enlÃ¨ve les crÃ©neaux interfÃ©rant avec nos plages libres.
+		//en garde une rÃ©fÃ©rence pour les restaurer Ã  la fin
 		LinkedList<LinkedList<HashSet<Creneau>>> l = null;
 		if(!plages.isEmpty()) {
 			l = new LinkedList<>();
@@ -122,20 +122,20 @@ public class Tri {
 			}
 		}
 
-		//crée l'arbre avec le comparateur donné en argument
+		//crÃ©e l'arbre avec le comparateur donnÃ© en argument
 		arbre = new TreeSet<>(compTab);
 
 		//calcul la liste des solutions
 		enumeration();
 
-		//enlève les combinaisons ne possédant pas les UE souhaitées.
+		//enlÃ¨ve les combinaisons ne possÃ©dant pas les UE souhaitÃ©es.
 
 		Iterator<UE[]> it = arbre.iterator();
 		//pour chaque combinaison
 		while (it.hasNext()) {
 			UE[] tabU = it.next();
 
-			//pour chaque UE souhaitée
+			//pour chaque UE souhaitÃ©e
 			for(Integer id : listeContenue) {
 				boolean trouve = false;
 
@@ -147,7 +147,7 @@ public class Tri {
 					}
 				}
 
-				//si non trouvée, enlève la combinaison
+				//si non trouvÃ©e, enlÃ¨ve la combinaison
 				if(!trouve) {
 					it.remove();
 					break;
@@ -156,14 +156,14 @@ public class Tri {
 		}
 
 
-		//restaure les créneaux chevauchant les plages libres
+		//restaure les crÃ©neaux chevauchant les plages libres
 		if(!plages.isEmpty()) {
 			for (LinkedList<HashSet<Creneau>> ll : l) {
 				UE.undoLaisserLibre(ll);
 			}
 		}
 
-		//restaure les UE non désirées
+		//restaure les UE non dÃ©sirÃ©es
 		UE.listeId.addAll(listeNonContenue);
 
 		return arbre;
@@ -175,14 +175,14 @@ public class Tri {
 	 */
 	public TreeSet<UE[]> triParId() {
 
-		//la variable membre afficheGroupe n'est pas définie pour le nouvel objet créé mais elle peut quand même être utilisée cf:
+		//la variable membre afficheGroupe n'est pas dÃ©finie pour le nouvel objet crÃ©Ã© mais elle peut quand mÃªme Ãªtre utilisÃ©e cf:
 		//https://en.wikipedia.org/wiki/Closure_(computer_programming)#Local_classes_and_lambda_functions_(Java)
 		Comparator<UE[]> comparatorTab = new Comparator<UE[]>() {
 
 			@Override
 			public int compare(UE[] o1, UE[] o2) {
 
-				//compare les id une par une et retourne à la première différence. Comme dans un vrai dictionnaire
+				//compare les id une par une et retourne Ã  la premiÃ¨re diffÃ©rence. Comme dans un vrai dictionnaire
 				for (int i = 0; i < o1.length; i++) {
 					final int dif = o1[i].getId() - o2[i].getId();
 					if(dif!=0) {
@@ -190,7 +190,7 @@ public class Tri {
 					}
 				}
 
-				//compare les groupes si demandé
+				//compare les groupes si demandÃ©
 				if(groupe/*acces a group possible*/) {
 					for (int i = 0; i < o1.length; i++) {
 						final int difG = o1[i].getTdChoisi()-o2[i].getTdChoisi();
@@ -200,8 +200,8 @@ public class Tri {
 					}
 				}
 
-				//sinon, traiter les deux résulats comme les mêmes
-				//(donc ne pas ajouter le deuxième à l'ensemble des résulats)
+				//sinon, traiter les deux rÃ©sulats comme les mÃªmes
+				//(donc ne pas ajouter le deuxiÃ¨me Ã  l'ensemble des rÃ©sulats)
 				return 0;
 			}
 		};
@@ -224,15 +224,15 @@ public class Tri {
 
 	/**
 	 * voir {@link #triParUEPrioritaire(List)}
-	 * prend les int les uns à la suite des autres
+	 * prend les int les uns Ã  la suite des autres
 	 */
 	public TreeSet<UE[]> triParUEPrioritaire(Integer... a) {
 		return triParUEPrioritaire(Arrays.asList(a));
 	}
 
 	/**
-	 * En ordonnant les id comme dans la liste passée en paramètre
-	 * La liste est complétée en insérant à la fin les id non renseignés par ordre croissant
+	 * En ordonnant les id comme dans la liste passÃ©e en paramÃ¨tre
+	 * La liste est complÃ©tÃ©e en insÃ©rant Ã  la fin les id non renseignÃ©s par ordre croissant
 	 */
 	public TreeSet<UE[]> triParUEPrioritaire(List<Integer> pref) {
 		//tri les UE par leur index dans pref puis par id
@@ -289,13 +289,13 @@ public class Tri {
 	}
 
 	/**
-	 * commence par afficher les résultats dont la somme des points est la plus haute
-	 * points[i] correspond au nombre de point associé à l'UE id[i].
-	 * par défaut les UE comptent pour 0 points.
-	 * Il est possible de mettre des valeurs négatives.
+	 * commence par afficher les rÃ©sultats dont la somme des points est la plus haute
+	 * points[i] correspond au nombre de point associÃ© Ã  l'UE id[i].
+	 * par dÃ©faut les UE comptent pour 0 points.
+	 * Il est possible de mettre des valeurs nÃ©gatives.
 	 */
 	public TreeSet<UE[]> triParPoints(int[] id, int[] points) {
-		//tri les UE par ordre de points décroissant
+		//tri les UE par ordre de points dÃ©croissant
 		Comparator<Integer> comparatorId = new Comparator<Integer>() {
 			@Override
 			public int compare(Integer o1, Integer o2) {
@@ -358,22 +358,22 @@ public class Tri {
 	}
 
 	/**
-	 * Enumère toutes les combinaisons possibles de {@value #NB_UE} UE
-	 * @param tree Les résulats sont stockés dans un arbre de UE[NB_UE], l'ordonnement est défini par l'arbre lors de sa création
+	 * EnumÃ¨re toutes les combinaisons possibles de {@value #NB_UE} UE
+	 * @param tree Les rÃ©sulats sont stockÃ©s dans un arbre de UE[NB_UE], l'ordonnement est dÃ©fini par l'arbre lors de sa crÃ©ation
 	 * @param tab tableau auxiliaire de NB_UE cases
-	 * @param indMin mettre à 0 lors de l'appel
-	 * @param profondeur mettre à 0 lors de l'appel
-	 * La complexité théorique doit être O(nb_groupe ^ taille_tableau * log(nb_groupe ^ taille_tableau))
-	 * Après exécution, avec une taille d'arbre obtenue n, on sait qu'on a eu une complexité de
+	 * @param indMin mettre Ã  0 lors de l'appel
+	 * @param profondeur mettre Ã  0 lors de l'appel
+	 * La complexitÃ© thÃ©orique doit Ãªtre O(nb_groupe ^ taille_tableau * log(nb_groupe ^ taille_tableau))
+	 * AprÃ¨s exÃ©cution, avec une taille d'arbre obtenue n, on sait qu'on a eu une complexitÃ© de
 	 * n*log(n)		pour les ajouts dans le tableau
-	 * n*nb_groupe 	(au maximum) pour énumérer les combinaisons
+	 * n*nb_groupe 	(au maximum) pour Ã©numÃ©rer les combinaisons
 	 */
 	private void enumeration(UE[] tab, int indMin, int profondeur){		
-		//inutile de tester avec les (length - profondeur) dernières UE
+		//inutile de tester avec les (length - profondeur) derniÃ¨res UE
 		//car il ne resterait pas assez d'UE pour remplir tab
 		final int indMax = UE.listeId.size() + profondeur - tab.length + 1;
 
-		//énumération avec toutes les UE disponibles
+		//Ã©numÃ©ration avec toutes les UE disponibles
 		for (int i=indMin; i<indMax; i++) {
 			UE u = UE.listeUE.get(UE.listeId.get(i));
 
@@ -386,15 +386,15 @@ public class Tri {
 				}
 				else {
 					for(int index : u.getIndicesLibres()) {
-						//rend indisponibles les créneaux incompatibles
+						//rend indisponibles les crÃ©neaux incompatibles
 						LinkedList<HashSet<Creneau>> m = u.prendre(index);
 
 						UE.checkOk(tab,profondeur);//debug
 
-						//appel récursif
+						//appel rÃ©cursif
 						enumeration(tab, i+1, profondeur+1);
 
-						//re-rend disponibles les créneaux précédents
+						//re-rend disponibles les crÃ©neaux prÃ©cÃ©dents
 						u.undo(m);
 					}
 				}
@@ -403,9 +403,9 @@ public class Tri {
 	}
 
 	/**
-	 * affiche la liste des résultats.
-	 * Il est possible d'effectuer un appel à {@link #differencieSelonGroupe(boolean)}
-	 * après avoir trié afin de changer l'affichage
+	 * affiche la liste des rÃ©sultats.
+	 * Il est possible d'effectuer un appel Ã  {@link #differencieSelonGroupe(boolean)}
+	 * aprÃ¨s avoir triÃ© afin de changer l'affichage
 	 */
 	public void afficheListe() {
 		for (UE[] tabU : arbre) {
@@ -415,29 +415,29 @@ public class Tri {
 	}
 
 	/**
-	 * retourne le nombre d'entrées dans l'arbre
+	 * retourne le nombre d'entrÃ©es dans l'arbre
 	 */
 	public void afficheTaille() {
 		System.out.println("nb combinaisons possibles " + arbre.size());
 	}
 
 	/**
-	 * retourne le nombre d'entrées dans l'arbre.
+	 * retourne le nombre d'entrÃ©es dans l'arbre.
 	 */
 	public int taille() {
 		return arbre.size();
 	}
 
 	/**
-	 * retourne le nombre de combinaisons théoriques.
-	 * Prend en compte les paramètres actuels (pas ceux du dernier tri effectué)
+	 * retourne le nombre de combinaisons thÃ©oriques.
+	 * Prend en compte les paramÃ¨tres actuels (pas ceux du dernier tri effectuÃ©)
 	 */
 	public int nbTheorique() {
-		//ne considère pas les UE qu'on ne prend pas
+		//ne considÃ¨re pas les UE qu'on ne prend pas
 		UE.listeId.removeAll(listeNonContenue);
 		
 		try {
-			//nombre d'UE qu'on a déjà pris
+			//nombre d'UE qu'on a dÃ©jÃ  pris
 			final int nbDejaChoisies = listeContenue.size();
 			
 			if(groupe) {
@@ -447,7 +447,7 @@ public class Tri {
 				//index dans le tableau
 				int i=0;
 				
-				//nombre de possibilité juste avec les UE choisies
+				//nombre de possibilitÃ© juste avec les UE choisies
 				int p=1;
 				
 				for (int id : UE.listeId) {
@@ -479,8 +479,8 @@ public class Tri {
 	}
 
 	/**
-	 * @param indexMin		mettre à 0
-	 * @param profondeur	mettre à 0
+	 * @param indexMin		mettre Ã  0
+	 * @param profondeur	mettre Ã  0
 	 * @param nbGroupe		tableau de n cases contenant le nombre de groupe de chaque UE
 	 * @param nbGroupeDesUEChoisies		tableau auxiliaire de k cases
 	 */
@@ -500,7 +500,5 @@ public class Tri {
 		}
 		return s;
 	}
-
-
 
 }

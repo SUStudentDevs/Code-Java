@@ -1,9 +1,10 @@
-package main.edtBrut;
+package com.sustudentdevs.algoues.edtBrut;
+
 public class Creneau {
 
 	private final int jour, debut, fin, groupe;
 
-	boolean disponible = true;// variable utilisée pour énumérer les combinaisons
+	boolean disponible = true;// variable utilisÃ©e pour Ã©numÃ©rer les combinaisons
 
 	Creneau(int jour, int debut, int fin, int groupe) {
 		this.jour = jour;
