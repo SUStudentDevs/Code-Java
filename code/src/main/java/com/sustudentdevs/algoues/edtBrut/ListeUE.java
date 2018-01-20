@@ -38,8 +38,8 @@ public class ListeUE {
 
 	/**
 	 * s'inscrit à une UE dans le groupe de TD donné en paramètre
-	 * @param indexTD retourné par {@link #getIndicesLibres()}
-	 * @return objet à fournir à {@link #undo()} afin de rétablir la situation telle qu'avant cet appel de fonction 
+	 * @param indexTD retourné par {@link UE#getIndicesLibres()}
+	 * @return objet à fournir à {@link UE#undo(HashSet)} afin de rétablir la situation telle qu'avant cet appel de fonction 
 	 */
 	public LinkedList<HashSet<Creneau>> prendre(UE ue, int indexTD) {
 		if(!ue.isDisponible() || !ue.getTd().get(indexTD).isDisponible()) {
@@ -69,8 +69,8 @@ public class ListeUE {
 
 
 	/**
-	 * annule un appel à {@link #prendre(int)}
-	 * @param l objet retourné par {@link #prendre(int)}
+	 * annule un appel à {@link #prendre(UE, int)}
+	 * @param l objet retourné par {@link #prendre(UE, int)}
 	 */
 	public void undo(UE ue, LinkedList<HashSet<Creneau>> l) {
 		for(int ueId : listeId.subList(listeId.indexOf(ue.getId()) + 1, listeId.size())) {
@@ -81,7 +81,7 @@ public class ListeUE {
 
 	/**
 	 * Libère un créneau ne correspondant pas à une UE
-	 * @return objet à fournir à {@link #undoLaisserLibre()} afin de rétablir la situation telle qu'avant cet appel de fonction 
+	 * @return objet à fournir à {@link #undoLaisserLibre(LinkedList)} afin de rétablir la situation telle qu'avant cet appel de fonction 
 	 */
 	public LinkedList<HashSet<Creneau>> laisserLibre(Creneau c) {
 		LinkedList<HashSet<Creneau>> l = new LinkedList<>();
@@ -99,8 +99,8 @@ public class ListeUE {
 	}
 
 	/**
-	 * annule un appel à {@link #laisserLibre()}
-	 * @param l objet retourné par {@link #laisserLibre()}
+	 * annule un appel à {@link #laisserLibre(Creneau)}
+	 * @param l objet retourné par {@link #laisserLibre(Creneau)}
 	 */
 	public void undoLaisserLibre(LinkedList<HashSet<Creneau>> l) {
 		for(int id : listeId) {
