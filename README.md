@@ -38,7 +38,7 @@ L'algorithme cherche donc à fournir la liste des combinaisons correctes.
 
 
 #### TODO :
-- _Permettre à l'utilisateur d'ordonner les résultats par ordre de préférence d'UE fait_ 
+- _Permettre à l'utilisateur d'ordonner les résultats par ordre de préférence d'UE (fait)_ 
 - Gérer des UE à 3 ECTS
 - Gérer les étudiants en UE projet
 - Gérer des UE possédant plusieurs créneaux pour leur amphi
