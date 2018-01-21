@@ -1,4 +1,5 @@
 package com.sustudentdevs.algoues.edtTravaille;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +13,8 @@ import com.sustudentdevs.algoues.edtBrut.*;
 
 public class Tri {
 	private static final int NB_UE = 5;
+	private final ListeUE listeUE;
+	private ArrayList<Integer> listeId;
 
 	/**
 	 * Si on permet à l'utilisateur d'obtenir cette référence, un changement
@@ -20,16 +23,20 @@ public class Tri {
 	 */
 	private TreeSet<UE[]> arbre;
 
+	public Tri(int[] id, int[] jour, int[] heure, int[] groupe) {
+		listeUE = new ListeUE(id, jour, heure, groupe);
+		listeId = listeUE.getListeId();
+	}
+
 	private boolean groupe;
 	/**
-	 * Les résultats sont plus précis si le boolean est vrai
+	 * Les résultats sont plus précis si on différencie les groupes
 	 */
 	public void differencieSelonGroupe(boolean b) {
 		groupe=b;
 	}
 
 	private final LinkedList<Creneau> plages = new LinkedList<>();
-
 	/**
 	 * Empêche les enseignements d'avoir lieu pendant ces plages
 	 */
@@ -49,9 +56,8 @@ public class Tri {
 		plages.clear();
 	}
 
-	private final LinkedList<Integer> listeContenue = new LinkedList<>(); 
-	private final LinkedList<Integer> listeNonContenue = new LinkedList<>(); 
 
+	private final LinkedList<Integer> listeContenue = new LinkedList<>(); 
 	/**
 	 * Force les résultats à contenir les UE choisies
 	 */
@@ -59,6 +65,7 @@ public class Tri {
 		prendre(id, listeContenue, listeNonContenue);
 	}
 
+	private final LinkedList<Integer> listeNonContenue = new LinkedList<>(); 
 	/**
 	 * Force les résultats à ne pas contenir les UE choisies
 	 */
@@ -66,8 +73,8 @@ public class Tri {
 		prendre(id, listeNonContenue, listeContenue);
 	}
 
-	private static void prendre(Integer id, LinkedList<Integer> add, LinkedList<Integer> remove) {
-		if(!UE.listeId.contains(id))
+	private void prendre(Integer id, LinkedList<Integer> add, LinkedList<Integer> remove) {
+		if(!listeId.contains(id))
 			throw new RuntimeException("n'existe pas");
 		if(add.contains(id))
 			throw new RuntimeException("déjà prise");
@@ -102,15 +109,15 @@ public class Tri {
 	 */
 	private TreeSet<UE[]> tri(Comparator<Integer> compUE, Comparator<UE[]> compTab) {
 		//enlève les UE non souhaitées de listeId seulement (et pas de listeUE)
-		UE.listeId.removeAll(listeNonContenue);
+		listeId.removeAll(listeNonContenue);
 
 		//tri listeId par l'ordre
 		if(compUE==null)
 			//naturel (croissant)
-			Collections.sort(UE.listeId);
+			Collections.sort(listeId);
 		else
 			//fourni en argument
-			UE.listeId.sort(compUE);
+			listeId.sort(compUE);
 
 		//enlève les créneaux interférant avec nos plages libres.
 		//en garde une référence pour les restaurer à la fin
@@ -118,7 +125,7 @@ public class Tri {
 		if(!plages.isEmpty()) {
 			l = new LinkedList<>();
 			for (Creneau c : plages) {
-				l.add(UE.laisserLibre(c));
+				l.add(listeUE.laisserLibre(c));
 			}
 		}
 
@@ -159,12 +166,12 @@ public class Tri {
 		//restaure les créneaux chevauchant les plages libres
 		if(!plages.isEmpty()) {
 			for (LinkedList<HashSet<Creneau>> ll : l) {
-				UE.undoLaisserLibre(ll);
+				listeUE.undoLaisserLibre(ll);
 			}
 		}
 
 		//restaure les UE non désirées
-		UE.listeId.addAll(listeNonContenue);
+		listeId.addAll(listeNonContenue);
 
 		return arbre;
 	}
@@ -193,7 +200,7 @@ public class Tri {
 				//compare les groupes si demandé
 				if(groupe/*acces a group possible*/) {
 					for (int i = 0; i < o1.length; i++) {
-						final int difG = o1[i].getTdChoisi()-o2[i].getTdChoisi();
+						final int difG = o1[i].getIndexTdChoisi()-o2[i].getIndexTdChoisi();
 						if(difG!=0) {
 							return difG;
 						}
@@ -277,7 +284,7 @@ public class Tri {
 				//les groupes
 				if(groupe){
 					for (int i = 0; i < o1.length; i++) {
-						final int difG = o1[i].getTdChoisi()-o2[i].getTdChoisi();
+						final int difG = o1[i].getIndexTdChoisi()-o2[i].getIndexTdChoisi();
 						if(difG!=0)
 							return difG;
 					}
@@ -319,7 +326,7 @@ public class Tri {
 
 				//puis les id un par un
 				for (int i = 0; i < o1.length; i++) {
-					final int dif = UE.listeId.indexOf(o1[i].getId()) - UE.listeId.indexOf(o2[i].getId());
+					final int dif = o1[i].getId() - o2[i].getId();
 					if(dif!=0)
 						return dif;
 				}
@@ -327,7 +334,7 @@ public class Tri {
 				//puis les groupes un par un
 				if(groupe){
 					for (int i = 0; i < o1.length; i++) {
-						final int difG = o1[i].getTdChoisi()-o2[i].getTdChoisi();
+						final int difG = o1[i].getIndexTdChoisi()-o2[i].getIndexTdChoisi();
 						if(difG!=0)
 							return difG;
 					}
@@ -371,23 +378,23 @@ public class Tri {
 	private void enumeration(UE[] tab, int indMin, int profondeur){		
 		//inutile de tester avec les (length - profondeur) dernières UE
 		//car il ne resterait pas assez d'UE pour remplir tab
-		final int indMax = UE.listeId.size() + profondeur - tab.length + 1;
+		final int indMax = listeId.size() + profondeur - tab.length + 1;
 
 		//énumération avec toutes les UE disponibles
 		for (int i=indMin; i<indMax; i++) {
-			UE u = UE.listeUE.get(UE.listeId.get(i));
+			UE u = listeUE.get(listeId.get(i));
 
 			if(u.isDisponible()) {
 				tab[profondeur]=u;
 
 				//appel terminal stocke tab dans arbre 
 				if(profondeur == tab.length - 1) {
-					u.ajoutChaqueGroupeDispo(arbre, tab);
+					listeUE.ajoutChaqueGroupeDispo(u,arbre, tab);
 				}
 				else {
 					for(int index : u.getIndicesLibres()) {
 						//rend indisponibles les créneaux incompatibles
-						LinkedList<HashSet<Creneau>> m = u.prendre(index);
+						LinkedList<HashSet<Creneau>> m = listeUE.prendre(u,index);
 
 						UE.checkOk(tab,profondeur);//debug
 
@@ -395,7 +402,7 @@ public class Tri {
 						enumeration(tab, i+1, profondeur+1);
 
 						//re-rend disponibles les créneaux précédents
-						u.undo(m);
+						listeUE.undo(u, m);
 					}
 				}
 			}
@@ -434,7 +441,7 @@ public class Tri {
 	 */
 	public int nbTheorique() {
 		//ne considère pas les UE qu'on ne prend pas
-		UE.listeId.removeAll(listeNonContenue);
+		listeId.removeAll(listeNonContenue);
 		
 		try {
 			//nombre d'UE qu'on a déjà pris
@@ -442,7 +449,7 @@ public class Tri {
 			
 			if(groupe) {
 				//tableau contenant le nombre de groupe pour chaque UE restante
-				int[] nbGroupe = new int[UE.listeId.size()-nbDejaChoisies];
+				int[] nbGroupe = new int[listeId.size()-nbDejaChoisies];
 				
 				//index dans le tableau
 				int i=0;
@@ -450,22 +457,25 @@ public class Tri {
 				//nombre de possibilité juste avec les UE choisies
 				int p=1;
 				
-				for (int id : UE.listeId) {
-					if(!listeContenue.contains(id))
-						nbGroupe[i++]=UE.listeUE.get(id).getTd().size();
-					else
-						p *= UE.listeUE.get(id).getTd().size();
+				for (int id : listeId) {
+					if(listeContenue.contains(id)) {
+						p *= listeUE.get(id).getTdSize();
+					}
+					else {
+						nbGroupe[i]=listeUE.get(id).getTdSize();
+						i++;
+					}
 				}
 				
 				return p * sumProdKNbParmiN(0, 0, nbGroupe, new int[NB_UE-nbDejaChoisies]);
 			}
 
-			return kParmiN(NB_UE - nbDejaChoisies, UE.listeId.size() - nbDejaChoisies);
+			return kParmiN(NB_UE - nbDejaChoisies, listeId.size() - nbDejaChoisies);
 		}
 		
 		finally {
 			//remet les UE
-			UE.listeId.addAll(listeNonContenue);
+			listeId.addAll(listeNonContenue);
 		}
 	}
 
